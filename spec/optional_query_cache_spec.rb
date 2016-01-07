@@ -1,3 +1,4 @@
+require 'action_controller/metal/exceptions'
 require 'active_record'
 require 'rack'
 
@@ -54,6 +55,25 @@ RSpec.describe OptionalQueryCache do
 
     it 'disables query caching for the route' do
       expect(ActiveRecord::Base).not_to receive(:connection)
+      subject.call(env)
+    end
+  end
+
+  context 'with an unrecognised route' do
+    before do
+      allow(env).to receive(:[]).with('action_dispatch.routes').and_raise(
+        ActionController::RoutingError.new('Unrecognised route')
+      )
+    end
+
+    it 'permits query caching' do
+      expect(ActiveRecord::Base).to receive(:connection).and_return(
+        double(
+          'connection',
+          query_cache_enabled: true,
+          enable_query_cache!: nil
+        )
+      )
       subject.call(env)
     end
   end
