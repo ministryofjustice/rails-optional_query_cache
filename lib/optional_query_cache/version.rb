@@ -1,4 +1,6 @@
-class OptionalQueryCache
+require 'active_record'
+
+class OptionalQueryCache < ActiveRecord::QueryCache
   module VERSION #:nodoc:
     MAJOR = 0
     MINOR = 1
