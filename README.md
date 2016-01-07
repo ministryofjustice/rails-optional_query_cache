@@ -35,4 +35,9 @@ Disable query caching on the routes in question:
 ```ruby
 # config/routes.rb
 get 'healthcheck', to: 'healthcheck#index', disable_query_cache: true
+# or, for multiple routes…
+scope disable_query_cache: true do
+  get 'route1', to: 'route1#index'
+  get 'route2', to: 'route2#index'
+end
 ```
