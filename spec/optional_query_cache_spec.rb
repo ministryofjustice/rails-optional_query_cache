@@ -6,7 +6,7 @@ require 'spec_helper'
 
 require 'optional_query_cache'
 
-RSpec.describe OptionalQueryCache do
+RSpec.describe OptionalQueryCache::QueryCache do
   let(:app) { ->(env) { [200, env, 'app'] } }
 
   let :subject do

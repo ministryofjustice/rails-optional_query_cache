@@ -27,7 +27,7 @@ ActiveRecord::QueryCache:
 
 ```ruby
 # config/application.rb
-config.middleware.swap 'ActiveRecord::QueryCache', 'OptionalQueryCache'
+config.middleware.swap 'ActiveRecord::QueryCache', 'OptionalQueryCache::QueryCache'
 ```
 
 Disable query caching on the routes in question:
