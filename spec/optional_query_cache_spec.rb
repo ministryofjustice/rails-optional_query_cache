@@ -19,6 +19,13 @@ RSpec.describe OptionalQueryCache::QueryCache do
     end
   end
 
+  let :mock_connection do
+    double(
+      'connection',
+      query_cache_enabled: true
+    )
+  end
+
   context 'with a normal route' do
     before do
       allow(env).to receive(:[]).with('action_dispatch.routes').and_return(
@@ -27,16 +34,13 @@ RSpec.describe OptionalQueryCache::QueryCache do
           recognize_path: {}
         )
       )
+      allow(ActiveRecord::Base).to receive(:connection).and_return(
+        mock_connection
+      )
     end
 
     it 'permits query caching' do
-      expect(ActiveRecord::Base).to receive(:connection).and_return(
-        double(
-          'connection',
-          query_cache_enabled: true,
-          enable_query_cache!: nil
-        )
-      )
+      expect(mock_connection).to receive(:enable_query_cache!)
       subject.call(env)
     end
   end
@@ -64,16 +68,13 @@ RSpec.describe OptionalQueryCache::QueryCache do
       allow(env).to receive(:[]).with('action_dispatch.routes').and_raise(
         ActionController::RoutingError.new('Unrecognised route')
       )
+      allow(ActiveRecord::Base).to receive(:connection).and_return(
+        mock_connection
+      )
     end
 
     it 'permits query caching' do
-      expect(ActiveRecord::Base).to receive(:connection).and_return(
-        double(
-          'connection',
-          query_cache_enabled: true,
-          enable_query_cache!: nil
-        )
-      )
+      expect(mock_connection).to receive(:enable_query_cache!)
       subject.call(env)
     end
   end
